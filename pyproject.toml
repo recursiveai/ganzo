@@ -10,6 +10,9 @@ readme = "README.md"
 requires-python=">=3.6,<4.0.0"
 dynamic = ["dependencies", "optional-dependencies"]
 
+[project.urls]
+homepage = "https://github.com/miguelnmiranda/ganzo"
+
 [project.scripts]
 ganzo = "ganzo.cmd:main"
 
