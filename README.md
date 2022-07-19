@@ -33,7 +33,7 @@ $ ganzo -h
 Create and load a virtual environement.
 
 ```
-python -m kantan .venv
+python -m venv .venv
 source .venv/bin/activate
 ```
 

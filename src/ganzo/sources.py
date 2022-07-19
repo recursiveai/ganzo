@@ -1,5 +1,4 @@
 import os
-from abc import abstractmethod
 
 from google.cloud import storage
 
@@ -12,7 +11,8 @@ class GCSSource:
     def list_templates(self):
         bucket = self.client.bucket(self.bucket_name)
         blob = bucket.blob("templates.list")
-        return blob.download_as_text()
+        content = blob.download_as_bytes().decode("utf-8").strip()
+        return content.split("\n")
 
     def load_template(self, template_name: str, target_path: str):
         template_path = f"{template_name}/"
