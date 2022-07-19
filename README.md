@@ -16,7 +16,7 @@ Example `configuration.json`:
 
 ```
 {
-    "requirements":
+    "gcs_bucket_name": "<gcs_bucket_name>" // Google Cloud Storage bucket where the templates are stored.
 }
 ```
 
