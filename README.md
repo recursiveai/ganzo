@@ -20,7 +20,7 @@ Example `configuration.json`:
 }
 ```
 
-Then check how to use ganzo in the commandline:
+Then check how to use ganzo in from commandline.
 
 ```
 $ ganzo -h
