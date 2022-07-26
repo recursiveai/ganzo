@@ -1,4 +1,5 @@
 import os
+from distutils.dir_util import copy_tree
 
 from google.cloud import storage
 
@@ -30,3 +31,10 @@ class GCSSource:
 
         if empty:
             raise ValueError(f"Template '{template_name}' does not exist.")
+
+class LocalSource:
+
+    def load_template(self, template_name: str, target_path: str):
+        template_path = f"{template_name}/"
+        print(f"Copying '{template_path}' into '{target_path}'")
+        copy_tree(template_path,target_path)

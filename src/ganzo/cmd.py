@@ -5,7 +5,7 @@ import os
 import sys
 
 from ganzo.resolvers import resolve_templates
-from ganzo.sources import GCSSource
+from ganzo.sources import GCSSource, LocalSource
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,6 @@ def load_template_gcs_bucket_name():
             f"Configuration attribute 'gcs_bucket_name' not defined in '{config_file_path}'."
         )
 
-
 def list_templates(_):
     gcs_bucket_name = load_template_gcs_bucket_name()
     source = GCSSource(gcs_bucket_name)
@@ -37,9 +36,13 @@ def list_templates(_):
         print(template)
 
 
+
 def load_template(options):
-    gcs_bucket_name = load_template_gcs_bucket_name()
-    source = GCSSource(gcs_bucket_name)
+    if options.local:
+        source = LocalSource()
+    else:
+        gcs_bucket_name = load_template_gcs_bucket_name()
+        source = GCSSource(gcs_bucket_name)
     source.load_template(options.template, options.directory)
     resolve_templates(options.directory, {"__PROJECT_NAME__" : options.project_name})
 
@@ -51,10 +54,15 @@ def run(args=None):
     list_parser = sub_parsers.add_parser("list", help="List available templates")
     list_parser.set_defaults(func=list_templates)
 
-    create_parser = sub_parsers.add_parser("load", help="Load template into target directory")
+    create_parser = sub_parsers.add_parser(
+        "load", help="Load template into target directory"
+    )
     create_parser.set_defaults(func=load_template)
+    create_parser.add_argument("-l", "--local",action='store_true')
     create_parser.add_argument(
-        "template", metavar="TEMPLATE_NAME", help="The template to load."
+        "template",
+        metavar="TEMPLATE_NAME_OR_PATH",
+        help="The template name or path to load.",
     )
     create_parser.add_argument(
         "directory", metavar="DIR_PATH", help="A directory load the template into."
