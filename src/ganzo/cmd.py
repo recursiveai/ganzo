@@ -7,7 +7,12 @@ from ganzo.core import list_templates, load_template
 def run(args=None):
     parser = argparse.ArgumentParser(prog="ganzo")
     sub_parsers = parser.add_subparsers(help="Available commands")
-    parser.add_argument("--local-source", help="Load templates from local directory")
+    parser.add_argument(
+        "-l",
+        "--local-source",
+        metavar="LOCAL_TEMPLATES_PATH",
+        help="Load templates from local directory.",
+    )
 
     list_parser = sub_parsers.add_parser("list", help="List available templates")
     list_parser.set_defaults(func=list_templates)

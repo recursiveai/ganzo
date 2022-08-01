@@ -11,7 +11,7 @@ class LocalSource(TemplateSource):
     def list_templates(self) -> list[str]:
         templates_path = os.path.join(self.base_path, "templates.list")
         with open(templates_path, "r", encoding="utf-8") as file:
-            return file.readlines()
+            return file.read().strip().split("\n")
 
     def load_template(self, template_name: str, target_path: str):
         template_path = os.path.join(self.base_path, template_name)
