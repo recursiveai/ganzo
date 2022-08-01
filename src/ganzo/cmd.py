@@ -1,55 +1,13 @@
 import argparse
-import json
-import logging
-import os
 import sys
 
-from ganzo.resolvers import resolve_templates
-from ganzo.sources import GCSSource, LocalSource
-
-logger = logging.getLogger(__name__)
-
-
-def load_template_gcs_bucket_name():
-    user_home = os.path.expanduser("~")
-    config_dir_path = os.path.join(user_home, ".ganzo")
-    config_file_path = os.path.join(config_dir_path, "configuration.json")
-
-    if not os.path.isdir(config_dir_path):
-        raise ValueError(f"No configuration available at '{config_dir_path}'.")
-
-    with open(config_file_path, "r", encoding="utf8") as config_file:
-        config = json.load(config_file)
-
-        if "gcs_bucket_name" in config:
-            return config["gcs_bucket_name"]
-
-        raise ValueError(
-            f"Configuration attribute 'gcs_bucket_name' not defined in '{config_file_path}'."
-        )
-
-def list_templates(_):
-    gcs_bucket_name = load_template_gcs_bucket_name()
-    source = GCSSource(gcs_bucket_name)
-    templates = source.list_templates()
-    for template in templates:
-        print(template)
-
-
-
-def load_template(options):
-    if options.local:
-        source = LocalSource()
-    else:
-        gcs_bucket_name = load_template_gcs_bucket_name()
-        source = GCSSource(gcs_bucket_name)
-    source.load_template(options.template, options.directory)
-    resolve_templates(options.directory, {"__PROJECT_NAME__" : options.project_name})
+from ganzo.core import list_templates, load_template
 
 
 def run(args=None):
     parser = argparse.ArgumentParser(prog="ganzo")
     sub_parsers = parser.add_subparsers(help="Available commands")
+    parser.add_argument("--local-source", help="Load templates from local directory")
 
     list_parser = sub_parsers.add_parser("list", help="List available templates")
     list_parser.set_defaults(func=list_templates)
@@ -58,14 +16,13 @@ def run(args=None):
         "load", help="Load template into target directory"
     )
     create_parser.set_defaults(func=load_template)
-    create_parser.add_argument("-l", "--local",action='store_true')
     create_parser.add_argument(
         "template",
-        metavar="TEMPLATE_NAME_OR_PATH",
-        help="The template name or path to load.",
+        metavar="TEMPLATE_NAME",
+        help="The name of the template to load.",
     )
     create_parser.add_argument(
-        "directory", metavar="DIR_PATH", help="A directory load the template into."
+        "directory", metavar="DIR_PATH", help="A directory to load the template into."
     )
     create_parser.add_argument(
         "project_name", metavar="PROJECT_NAME", help="Name of the project."

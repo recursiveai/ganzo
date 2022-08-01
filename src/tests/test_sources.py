@@ -1,6 +1,6 @@
 from unittest import mock
 
-import ganzo.sources as s
+import ganzo.sources.gcs as s
 
 
 @mock.patch("google.cloud.storage.Client")
