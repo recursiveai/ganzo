@@ -37,7 +37,7 @@ def run(args=None):
         options = parser.parse_args(args)
         options.func(options)
     except (AttributeError, ValueError) as exception:
-        print(exception, file=sys.stderr)
+        print("Error:", exception, file=sys.stderr)
         parser.print_help()
 
 
