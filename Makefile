@@ -1,4 +1,3 @@
-SHELL := /bin/zsh
 .DEFAULT_GOAL := help
 
 install: ## Install all dependencies in editable mode
