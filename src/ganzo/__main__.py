@@ -1,4 +1,4 @@
-from ganzo.cmd import main
+from ganzo.cli import main
 
 if __name__ == "__main__":
     main()

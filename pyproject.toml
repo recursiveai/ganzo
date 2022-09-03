@@ -4,17 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ganzo"
-version = "0.2.1"
+version = "0.3.0"
 description = "Project generator from templates"
 readme = "README.md"
-requires-python=">=3.6,<4.0.0"
+requires-python=">=3.9,<4.0.0"
 dynamic = ["dependencies", "optional-dependencies"]
 
 [project.urls]
 homepage = "https://github.com/miguelnmiranda/ganzo"
 
 [project.scripts]
-ganzo = "ganzo.cmd:main"
+ganzo = "ganzo.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
