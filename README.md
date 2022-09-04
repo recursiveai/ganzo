@@ -1,6 +1,6 @@
 # Ganzo
 
-Project generator from templates.
+Project creator (from templates).
 
 ## How to use?
 
