@@ -8,14 +8,19 @@ from ganzo.sources.local import LocalSource
 
 logger = logging.getLogger(__name__)
 
+GANZO_CONFIG_DIR = os.path.join("~", ".ganzo")
+GANZO_CONFIG_FILE = "configuration.json"
+
 
 def load_template_gcs_bucket_name():
-    user_home = os.path.expanduser("~")
-    config_dir_path = os.path.join(user_home, ".ganzo")
-    config_file_path = os.path.join(config_dir_path, "configuration.json")
+    ganzo_home = os.path.expanduser(GANZO_CONFIG_DIR)
+    config_file_path = os.path.join(ganzo_home, GANZO_CONFIG_FILE)
 
-    if not os.path.isdir(config_dir_path):
-        raise ValueError(f"No configuration available at '{config_dir_path}'.")
+    if not os.path.isdir(ganzo_home):
+        raise ValueError(f"No configuration folder available at '{ganzo_home}'.")
+
+    if not os.path.isfile(config_file_path):
+        raise ValueError(f"No configuration file available at '{config_file_path}'.")
 
     with open(config_file_path, "r", encoding="utf8") as config_file:
         config = json.load(config_file)

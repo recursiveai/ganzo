@@ -4,6 +4,9 @@ from google.cloud import storage
 
 from ganzo.sources import TemplateSource
 
+# Because of Python <=3.8
+def _remove_prefix(text: str, prefix: str) -> str:
+    return text[len(prefix):] if text.startswith(prefix) else text
 
 class GCSSource(TemplateSource):
     def __init__(self, bucket_name: str):
@@ -23,7 +26,7 @@ class GCSSource(TemplateSource):
         empty = True
         for blob in blobs:
             empty = False
-            file_relative_path = blob.name.removeprefix(template_path)
+            file_relative_path = _remove_prefix(blob.name, template_path)
             file_path = os.path.join(target_path, file_relative_path)
             file_dir, _ = os.path.split(file_path)
             print(f"Loading 'gs://{blob.bucket.name}/{blob.name}' into '{file_path}'")

@@ -46,7 +46,7 @@ def main():
     try:
         run()
         return_code = 0
-    except Exception as exception: # pylint: disable=W0703
+    except Exception as exception:  # pylint: disable=W0703
         print(f"Error: {exception}", file=sys.stderr)
     sys.exit(return_code)
 

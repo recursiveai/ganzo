@@ -1,5 +1,6 @@
 import os
 from distutils.dir_util import copy_tree
+from typing import List
 
 from ganzo.sources import TemplateSource
 
@@ -8,7 +9,7 @@ class LocalSource(TemplateSource):
     def __init__(self, base_path: str):
         self.base_path = base_path
 
-    def list_templates(self) -> list[str]:
+    def list_templates(self) -> List[str]:
         templates_path = os.path.join(self.base_path, "templates.list")
         with open(templates_path, "r", encoding="utf-8") as file:
             return file.read().strip().split("\n")
