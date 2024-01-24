@@ -4,6 +4,7 @@ import os
 
 from ganzo.resolvers import resolve_templates
 from ganzo.sources.gcs import GCSSource
+from ganzo.sources.git import GitSourceWrapper
 from ganzo.sources.local import LocalSource
 
 logger = logging.getLogger(__name__)
@@ -40,6 +41,9 @@ def list_templates(options):
         gcs_bucket_name = load_template_gcs_bucket_name()
         source = GCSSource(gcs_bucket_name)
 
+    if options.git_power:
+        source = GitSourceWrapper(source)
+
     templates = source.list_templates()
     for template in templates:
         print(template)
@@ -51,6 +55,9 @@ def load_template(options):
     else:
         gcs_bucket_name = load_template_gcs_bucket_name()
         source = GCSSource(gcs_bucket_name)
+
+    if options.git_power:
+        source = GitSourceWrapper(source)
 
     source.load_template(options.template, options.directory)
     resolve_templates(options.directory, {"__PROJECT_NAME__": options.project_name})

@@ -14,6 +14,13 @@ def run(args=None):
         help="Load templates from local directory.",
     )
 
+    parser.add_argument(
+        "-g",
+        "--git-power",
+        action="store_true",
+        help="Load templates from git repositories provided in template list.",
+    )
+
     list_parser = sub_parsers.add_parser("list", help="List available templates")
     list_parser.set_defaults(func=list_templates)
 
