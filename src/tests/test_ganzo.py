@@ -16,7 +16,7 @@ def _cleanup(directory: str):
 def test_local_list_cli(mock_print: Mock):
     # Given
     templates_path = str(_tests_root.joinpath("fixtures", "templates"))
-    args = ["--local-source", templates_path, "list"]
+    args = ["--local-source", templates_path, "--legacy", "list"]
 
     # When
     run(args)
@@ -35,6 +35,7 @@ def test_local_load_cli():
     args = [
         "--local-source",
         templates_path,
+        "--legacy",
         "load",
         "example",
         project_path,
@@ -56,14 +57,14 @@ def test_local_load_cli():
 def test_local_git_list_cli(mock_print: Mock):
     # Given
     templates_path = str(_tests_root.joinpath("fixtures", "templates"))
-    args = ["--local-source", templates_path, "--git-power", "list"]
+    args = ["--local-source", templates_path, "list"]
 
     # When
     run(args)
 
     # Then
     actuals = list(map(lambda c: c[0][0], mock_print.call_args_list))
-    expecteds = ["example https://github.com/521xueweihan/HelloGitHub.git"]
+    expecteds = ["example https://github.com/521xueweihan/HelloGitHub.git master"]
     assert len(actuals) == len(expecteds)
     assert all(actual == expected for actual, expected in zip(actuals, expecteds))
 
@@ -75,7 +76,6 @@ def test_local_git_load_cli():
     args = [
         "--local-source",
         templates_path,
-        "--git-power",
         "load",
         "example",
         project_path,
@@ -89,6 +89,7 @@ def test_local_git_load_cli():
     assert os.path.exists(project_path)
     assert os.path.exists(os.path.join(project_path, "README.md"))
     assert os.path.exists(os.path.join(project_path, ".gitignore"))
+    assert not os.path.exists(os.path.join(project_path, ".git"))
 
     _cleanup(project_path)
 
@@ -96,7 +97,7 @@ def test_local_git_load_cli():
 @patch("builtins.print")
 def test_gcp_list_cli(mock_print: Mock):
     # Given
-    args = ["list"]
+    args = ["--legacy", "list"]
 
     # When
     run(args)
@@ -110,7 +111,7 @@ def test_gcp_list_cli(mock_print: Mock):
 def test_gcp_load_cli():
     # Given
     project_path = str(_tests_root.joinpath("test_project_2"))
-    args = ["load", "app", project_path, "test_project"]
+    args = ["--legacy", "load", "app", project_path, "test_project"]
 
     # When
     run(args)

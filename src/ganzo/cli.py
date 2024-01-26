@@ -15,10 +15,10 @@ def run(args=None):
     )
 
     parser.add_argument(
-        "-g",
-        "--git-power",
+        "--legacy",
+        default=False,
         action="store_true",
-        help="Load templates from git repositories provided in template list.",
+        help="Load templates using legacy strategy.",
     )
 
     list_parser = sub_parsers.add_parser("list", help="List available templates")

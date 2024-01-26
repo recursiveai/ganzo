@@ -1,3 +1,4 @@
+import shutil
 import tempfile
 from distutils.dir_util import copy_tree
 from typing import List
@@ -20,19 +21,30 @@ class GitSourceWrapper(TemplateSource):
     def list_templates(self) -> List[str]:
         return self.source.list_templates()
 
-    def load_template(self, template_name: str, target_path: str):
-        blah = [template.split(" ") for template in self.list_templates()]
-        templates = {key: value for key, value in blah}
+    def load_template(
+        self,
+        template_name: str,
+        target_path: str,
+    ):
+        entries = [template.split(" ") for template in self.list_templates()]
+        templates = {entry[0]: (entry[1], entry[2]) for entry in entries}
 
         if template_name not in templates:
             raise ValueError(f"{template_name} not an available template")
 
         with tempfile.TemporaryDirectory() as tmp_dir:
-            print(f"Cloning {templates[template_name]} into '{tmp_dir}'")
-            repo = Repo.clone_from(templates[template_name], tmp_dir)
-            target_branch = repo.create_head("main")
-            repo.head.reference = target_branch
-            repo.head.reset(index=True, working_tree=True)
+            print(f"Cloning {templates[template_name][0]} into '{tmp_dir}'")
+
+            Repo.clone_from(
+                templates[template_name][0],
+                tmp_dir,
+                multi_options=[
+                    "--single-branch",
+                    f"-b {templates[template_name][1]}",
+                ],
+            )
+
+            shutil.rmtree(f"{tmp_dir}/.git")
 
             print(f"Copying {template_name} from '{tmp_dir}' into '{target_path}'")
             copy_tree(tmp_dir, target_path)

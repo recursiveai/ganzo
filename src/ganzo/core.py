@@ -41,7 +41,7 @@ def list_templates(options):
         gcs_bucket_name = load_template_gcs_bucket_name()
         source = GCSSource(gcs_bucket_name)
 
-    if options.git_power:
+    if not options.legacy:
         source = GitSourceWrapper(source)
 
     templates = source.list_templates()
@@ -56,7 +56,7 @@ def load_template(options):
         gcs_bucket_name = load_template_gcs_bucket_name()
         source = GCSSource(gcs_bucket_name)
 
-    if options.git_power:
+    if not options.legacy:
         source = GitSourceWrapper(source)
 
     source.load_template(options.template, options.directory)

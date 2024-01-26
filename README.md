@@ -1,6 +1,6 @@
 # Ganzo
 
-Project creator (from templates).
+Creates new project from templates stored in git repositories.
 
 ## How to use?
 
@@ -16,7 +16,7 @@ Example `configuration.json`:
 
 ```
 {
-    "gcs_bucket_name": "<gcs_bucket_name>" // Google Cloud Storage bucket where the templates are stored.
+    "gcs_bucket_name": "<gcs_bucket_name>" // Google Cloud Storage bucket where the template list is stored.
 }
 ```
 
@@ -25,7 +25,35 @@ Then check how to use ganzo in from commandline.
 ```
 $ ganzo -h
 ```
+
 ## Templates
+
+Templates are store in a directory containing a `templates.list` file which contains a template entry per line.
+
+The `templates.list` file for the previous directory should list all the templates available.
+
+```
+# Content of templates.list
+<template_name> <template_git_url> <template_git_branch>
+app git@github.com:organozation/project_app.git main
+list https://github.com/organozation/project_list.git dev
+```
+
+### Variable resolution
+
+Files with extension `.nzo` are candidates for variable resolution,
+which will replace variables within the files with project specific values.
+
+```
+# Content of README.md.nzo
+
+This projects name is ${PROJECT_NAME}.
+```
+
+Currently the only available variable for resolution is `PROJECT_NAME`.
+
+
+## Legacy Templates (version <= 0.5.0)
 
 Templates are store in a directory containing a `templates.list` file,
 which contains a template name per line.
@@ -47,24 +75,12 @@ The `templates.list` file for the previous directory should list all the templat
 
 ```
 # Content of templates.list
+<template_name>
 app
 list
 ```
 
 Each templates directory will be fully copied as part of loading the template for a new project.
-
-### Variable resolution
-
-Files with extension `.nzo` are candidates for variable resolution,
-which will replace variables within the files with project specific values.
-
-```
-# Content of README.md.nzo
-
-This projects name is ${PROJECT_NAME}.
-```
-
-Currently the only available variable for resolution is `PROJECT_NAME`.
 
 ## Development
 
@@ -95,7 +111,6 @@ make help
 
 ## Areas of improvement
 
-- Add/Test Support for older/newer Python versions.
 - Support for custom variables.
 - Directory structure changes based on variables.
 - Improve coverage of core and resolvers.
